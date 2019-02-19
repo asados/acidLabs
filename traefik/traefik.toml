@@ -1,0 +1,14 @@
+[accessLog]
+  filePath = "/dev/stdout"
+[traefikLog]
+   filePath = "/dev/stdout"
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+defaultEntryPoints = ["http"]
+
+[docker]
+domain = "docker.localhost"
+watch = true
+exposedbydefault = false

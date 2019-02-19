@@ -1,0 +1,14 @@
+{
+  "name": "docker_web_api",
+  "version": "1.0.0",
+  "description": "API redis",
+  "author": "Aasdrubal Dominguez <asados@gmail.com>",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}
+

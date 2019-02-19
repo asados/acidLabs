@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Desaf&iacute;o T&eacute;cnico: Asdr&uacute;bal Dom&iacute;nguez</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+      <span class="metadata-marker" style="display: none;" data-region_tag="css"></span>
+<span class="metadata-marker" style="display: none;" data-region_tag="html-body"></span>
+<div id="map"></div>
+<span class="metadata-marker" style="display: none;" data-region_tag="script-body"></span> 
+ <script>
+    var map;
+    var geocoder;
+    var infoWindow;
+    var marker;
+    const urlApi = "/api/";
+
+   function initMap()
+   {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 0, lng: -7.5920531},
+      zoom: 3,
+      gestureHandling: 'none',
+      zoomControl: false,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+    });
+        
+    geocoder = new google.maps.Geocoder();
+    infowindow = new google.maps.InfoWindow();
+  
+    function findLocation(componet,locality)
+    {
+     for (let i=0; i<componet.length; i++)
+     {
+      if (componet[i].types[0] == locality) 
+      {return componet[i].long_name;}
+     }
+    }
+ 
+    google.maps.event.addListener(map, 'click', function (event) {
+     geocoder.geocode({
+      'latLng': event.latLng,
+    }, function (results, status){
+      var country, city;
+      if (status == google.maps.GeocoderStatus.OK)
+      {
+        if (results[0])
+        {
+         if (marker) 
+         {marker.setPosition(event.latLng)} 
+         else
+         {
+          marker = new google.maps.Marker({
+              position: event.latLng,
+              map: map,
+            })
+         }
+          
+         country =findLocation(results[0].address_components,"country");
+         city =findLocation(results[0].address_components,"administrative_area_level_1");
+         updateinfo(country,city, results[0].geometry.location.lat(), results[0].geometry.location.lng());
+        } 
+        else
+        {document.getElementById('mensaje').innerHTML = 'No se encontraron resultados';}
+      }
+      else
+      {document.getElementById('mensaje').innerHTML = 'Geocodificación  ha fallado debido a: ' + status;}
+    });
+  });
+  
+  /*
+   * Se encanga de realizar la peticion al API para obtener la temperatura de la region seleccionada
+   */
+  function updateinfo(country,city, lat, lng)
+  {
+   var xhttp = new XMLHttpRequest();
+   
+   xhttp.onreadystatechange = function()
+    {
+     if (this.readyState === 4) // Si ya se completo el request, procesamos la informacion
+     {
+      if(this.status === 200)
+      {
+       let data = JSON.parse(this.responseText);
+       if(data.error===true)
+       {infowindow.setContent('<br/>Error al obtener la informacion: '+'<br/>' + data.message);}
+       else
+       {infowindow.setContent('<br/> Pais: ' + country + " - "+ city + '<br/> Temperatura: ' + data.data.temperature + ' C<br/> Estación: ' + data.data.station + '<br/> Cache: ' + data.cache);}
+      }
+      else
+      {infowindow.setContent('<br/>Error al obtener la informacion: '+'<br/>' + this.responseText);}
+     }
+      else // imprimimos un mensaje de espera hasta que se complete la transaccion
+     {infowindow.setContent('<br/> Obteniendo Información... ');}
+     
+     infowindow.open(map, marker);   
+     
+   };
+   xhttp.open("GET", urlApi + country + "/"+lat + ","+ lng, true);
+   xhttp.send();
+  }
+
+ }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEWzXCDQxi_AcK-6iYWE31p9mi021RU7A&callback=initMap"
+    async defer></script>
+</html>
