@@ -8,11 +8,11 @@ El aplicativo consta de servicios docker y su despleigue puede realizarce lameno
 
 Para este despliegue, debemos ingresar al directorio "traefik/" y copiar el archivo "Dockerfile_docker-composer" con el nombre "Dockerfile" y luego desplegar con docker-composer:
 
-...
+```
 $ cp traefik/Dockerfile_docker-composer traefik/Dockerfile
 $ docker-compose build
 $ docker-compose up -d
-...
+```
 
 La aplicación será accesible desde la URL "http://<ip_maquina_docker>", por ejemplo, desde la misma máquina donde se despliega el docker "http://127.0.0.1"
 
@@ -28,9 +28,9 @@ Un ejemplo de uso:
  
  Para este despliegue, debemos ingresar al directorio "traefik/" y copiar el archivo "Dockerfile_heroku" con el nombre "Dockerfile" y luego desplegar según las politicas propias de Heroku, para los container "api" "home" y "traefik" :
 
-...
+```
 $ cp traefik/Dockerfile_heroku traefik/Dockerfile
-...
+```
 
 El sistema se encuentra desplegado y puede ser accesado con la siguiente nomemclatura:
 
