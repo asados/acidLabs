@@ -1,0 +1,6 @@
+FROM traefik:alpine
+COPY ./traefik_heroku.toml /etc/traefik/traefik.toml
+ADD entrypoint.sh /
+
+CMD ["/entrypoint.sh"]
+ENTRYPOINT [ "/entrypoint.sh" ]
